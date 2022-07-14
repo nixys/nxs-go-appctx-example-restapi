@@ -1,7 +1,7 @@
 package ctx
 
 import (
-	"example/db/mysql"
+	"example/ds/mysql"
 
 	appctx "github.com/nixys/nxs-go-appctx/v2"
 )

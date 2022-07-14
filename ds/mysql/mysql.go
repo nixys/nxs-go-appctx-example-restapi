@@ -1,12 +1,15 @@
 package mysql
 
 import (
-	"github.com/jmoiron/sqlx"
+	"fmt"
+
+	gmysql "gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 // MySQL it is a MySQL module context structure
 type MySQL struct {
-	client *sqlx.DB
+	client *gorm.DB
 }
 
 // Settings contains settings for MySQL
@@ -20,19 +23,22 @@ type Settings struct {
 // Connect connects to MySQL
 func Connect(s Settings) (MySQL, error) {
 
-	var m MySQL
-
-	client, err := sqlx.Connect("mysql", s.User+":"+s.Password+"@"+"tcp("+s.Host+")/"+s.Database+"?parseTime=true")
+	client, err := gorm.Open(gmysql.Open(fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		s.User,
+		s.Password,
+		s.Host,
+		s.Database)), &gorm.Config{})
 	if err != nil {
-		return m, err
+		return MySQL{}, err
 	}
 
-	m.client = client
-
-	return m, nil
+	return MySQL{
+		client: client,
+	}, nil
 }
 
 // Close closes MySQL connection
 func (m *MySQL) Close() error {
-	return m.client.Close()
+	db, _ := m.client.DB()
+	return db.Close()
 }

@@ -3,15 +3,15 @@ version: '2'
 services:
   mysql:
     image: 'bitnami/mysql:latest'
-    container_name: example-mysql
+    container_name: appctx-example-mysql
     ports:
     - 3306:3306
     volumes:
-    - db-data:/bitnami/mysql/data
+    - appctx-example-db-data:/bitnami/mysql/data
     environment:
     - MYSQL_USER=user
     - MYSQL_DATABASE=db
     - MYSQL_PASSWORD=somepass
     - MYSQL_ROOT_PASSWORD=somepass
 volumes:
-  db-data:
+  appctx-example-db-data:
