@@ -104,6 +104,7 @@ go run main.go
 ## Feedback
 
 For support and feedback please contact me:
+- [GitHub issues](https://github.com/nixys/nxs-go-appctx-example-restapi/issues)
 - telegram: [@borisershov](https://t.me/borisershov)
 - e-mail: b.ershov@nixys.ru
 
