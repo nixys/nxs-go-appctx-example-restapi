@@ -1,15 +1,15 @@
 # nxs-go-appctx-example-restapi
 
-This projects implements the following elements:
+## Introduction
+
+The application represents an API server based on [nxs-go-appctx](https://github.com/nixys/nxs-go-appctx) with implemented CRUD operations for manage user accounts stored in MySQL.
+
+This project applies the following elements:
 - [nxs-go-appctx](https://github.com/nixys/nxs-go-appctx) library helps bring together all the components for create a complete REST API server
 - Project structure you may use for it (described in [nxs-go-appctx](https://github.com/nixys/nxs-go-appctx) documentation)
 - [GORM](https://github.com/go-gorm/gorm) library to work with databases (MySQL in this case)
 - [Gin Web Framework](github.com/gin-gonic/gin) to create a REST API
 - [golang-migrate](https://github.com/golang-migrate/migrate) to write the database migrations
-
-## Description
-
-The application represents an API server with implemented CRUD operations for manage user accounts stored in MySQL.
 
 ## Quickstart
 
