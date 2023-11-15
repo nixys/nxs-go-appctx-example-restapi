@@ -19,7 +19,7 @@ func RoutesSet(cc *ctx.Ctx) *gin.Engine {
 	v1 := router.Group("/v1")
 	{
 		v1.Use(endpoints.RequestSizeLimiter(cc.API.ClientMaxBodySizeBytes))
-		v1.Use(endpoints.Authorize(cc.Conf.API.AuthToken))
+		v1.Use(endpoints.Authorize(cc.API.AuthToken))
 
 		user := v1.Group("/user")
 		{

@@ -15,15 +15,22 @@ import (
 
 // Ctx defines application custom context
 type Ctx struct {
-	Conf            confOpts
 	CounterInterval time.Duration
 	Log             *logrus.Logger
 	User            *user.User
-	API             apiSettings
+	API             apiCtx
 }
 
-type apiSettings struct {
+type apiCtx struct {
+	Bind                   string
+	TLS                    *apiTLSCtx
 	ClientMaxBodySizeBytes int64
+	AuthToken              string
+}
+
+type apiTLSCtx struct {
+	CertFile string
+	KeyFie   string
 }
 
 func AppCtxInit() (any, error) {
@@ -48,15 +55,12 @@ func AppCtxInit() (any, error) {
 		return nil, err
 	}
 
-	// Set application context
-	c.Conf = conf
-
 	primeDB, err := primedb.Connect(primedb.Settings{
-		Host:     c.Conf.MySQL.Host,
-		Port:     c.Conf.MySQL.Port,
-		Database: c.Conf.MySQL.DB,
-		User:     c.Conf.MySQL.User,
-		Password: c.Conf.MySQL.Password,
+		Host:     conf.MySQL.Host,
+		Port:     conf.MySQL.Port,
+		Database: conf.MySQL.DB,
+		User:     conf.MySQL.User,
+		Password: conf.MySQL.Password,
 	})
 	if err != nil {
 		c.Log.Errorf("ctx init: %s", err.Error())
@@ -67,10 +71,25 @@ func AppCtxInit() (any, error) {
 		DB: primeDB,
 	})
 
-	c.API.ClientMaxBodySizeBytes, err = units.RAMInBytes(c.Conf.API.ClientMaxBodySize)
+	bts, err := units.RAMInBytes(conf.API.ClientMaxBodySize)
 	if err != nil {
 		c.Log.Errorf("ctx init: parse client max body size: %s", err.Error())
 		return nil, err
+	}
+
+	c.API = apiCtx{
+		Bind: conf.API.Bind,
+		TLS: func() *apiTLSCtx {
+			if conf.API.TLS == nil {
+				return nil
+			}
+			return &apiTLSCtx{
+				CertFile: conf.API.TLS.CertFile,
+				KeyFie:   conf.API.TLS.KeyFie,
+			}
+		}(),
+		ClientMaxBodySizeBytes: bts,
+		AuthToken:              conf.API.AuthToken,
 	}
 
 	return c, nil
