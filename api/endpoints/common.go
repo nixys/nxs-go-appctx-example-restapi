@@ -3,6 +3,7 @@ package endpoints
 import (
 	"context"
 	"net/http"
+	"strings"
 
 	"github.com/nixys/nxs-go-appctx-example-restapi/ctx"
 
@@ -77,24 +78,22 @@ func RequestSizeLimiter(limit int64) gin.HandlerFunc {
 	}
 }
 
-func CORSMiddleware() gin.HandlerFunc {
+func Authorization(c context.Context, token string) gin.HandlerFunc {
 	return func(gc *gin.Context) {
 
-		gc.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-		gc.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
-		gc.Writer.Header().Set("Access-Control-Allow-Headers", "X-CustomHeader, Keep-Alive, User-Agent, X-Requested-With, X-Auth-Health-Key, X-Auth-Key, If-Modified-Since, Cache-Control, Content-Type")
-		gc.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT, OPTIONS")
-
-		if gc.Request.Method == http.MethodOptions {
-			gc.AbortWithStatus(http.StatusNoContent)
+		at := gc.GetHeader("Authorization")
+		if len(at) == 0 {
+			gc.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
-	}
-}
 
-func Authorize(c context.Context, authKey string) gin.HandlerFunc {
-	return func(gc *gin.Context) {
-		if gc.GetHeader("X-Auth-Key") == authKey {
+		t := strings.TrimPrefix(at, "Bearer ")
+		if t == at {
+			gc.AbortWithStatus(http.StatusUnauthorized)
+			return
+		}
+
+		if t == token {
 			return
 		}
 		gc.AbortWithStatus(http.StatusUnauthorized)

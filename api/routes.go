@@ -2,10 +2,12 @@ package api
 
 import (
 	"context"
+	"time"
 
 	"github.com/nixys/nxs-go-appctx-example-restapi/api/endpoints"
 	"github.com/nixys/nxs-go-appctx-example-restapi/ctx"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,12 +18,24 @@ func RoutesSet(c context.Context, cc *ctx.Ctx) *gin.Engine {
 	router := gin.New()
 
 	router.Use(endpoints.Logger(cc.Log))
-	router.Use(endpoints.CORSMiddleware())
+
+	router.Use(
+		cors.New(
+			cors.Config{
+				AllowOrigins:     cc.API.CORS.AllowOrigins,
+				AllowMethods:     []string{"GET", "POST", "DELETE", "PUT", "PATCH", "OPTIONS"},
+				AllowHeaders:     []string{"Origin", "Authorization", "Content-Type", "Accept-Encoding"},
+				ExposeHeaders:    []string{"Content-Length", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials", "Access-Control-Allow-Headers", "Access-Control-Allow-Methods"},
+				AllowCredentials: true,
+				MaxAge:           12 * time.Hour,
+			},
+		),
+	)
 
 	v1 := router.Group("/v1")
 	{
 		v1.Use(endpoints.RequestSizeLimiter(cc.API.ClientMaxBodySizeBytes))
-		v1.Use(endpoints.Authorize(c, cc.API.AuthToken))
+		v1.Use(endpoints.Authorization(c, cc.API.AuthToken))
 
 		user := v1.Group("/user")
 		{

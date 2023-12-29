@@ -26,11 +26,16 @@ type apiCtx struct {
 	TLS                    *apiTLSCtx
 	ClientMaxBodySizeBytes int64
 	AuthToken              string
+	CORS                   corsCtx
 }
 
 type apiTLSCtx struct {
 	CertFile string
 	KeyFie   string
+}
+
+type corsCtx struct {
+	AllowOrigins []string
 }
 
 func AppCtxInit() (any, error) {
@@ -90,6 +95,15 @@ func AppCtxInit() (any, error) {
 		}(),
 		ClientMaxBodySizeBytes: bts,
 		AuthToken:              conf.API.AuthToken,
+		CORS: corsCtx{
+			AllowOrigins: func() []string {
+				orgns := []string{}
+				for _, o := range conf.API.CORS.AllowOrigins {
+					orgns = append(orgns, o)
+				}
+				return orgns
+			}(),
+		},
 	}
 
 	return c, nil

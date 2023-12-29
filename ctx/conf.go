@@ -19,6 +19,7 @@ type apiConf struct {
 	TLS               *tlsConf `conf:"tls"`
 	ClientMaxBodySize string   `conf:"clientMaxBodySize" conf_extraopts:"default=36m"`
 	AuthToken         string   `conf:"authToken" conf_extraopts:"required"`
+	CORS              corsConf `conf:"cors" conf_extraopts:"required"`
 }
 
 type mysqlConf struct {
@@ -32,6 +33,10 @@ type mysqlConf struct {
 type tlsConf struct {
 	CertFile string `conf:"certfile" conf_extraopts:"required"`
 	KeyFie   string `conf:"keyfile" conf_extraopts:"required"`
+}
+
+type corsConf struct {
+	AllowOrigins []string `conf:"allowOrigins" conf_extraopts:"required"`
 }
 
 func confRead(confPath string) (confOpts, error) {
