@@ -40,7 +40,7 @@ go run main.go
 - To test application make a following requests to API:
   - Create new user account:
     ```bash
-    curl -X POST -H "X-Auth-Key: some_auth_token" -d '{"username": "userA"}'  "http://127.0.0.1:8080/v1/user"
+    curl -X POST -H "Authorization: Bearer some_auth_token" -d '{"username": "userA"}'  "http://127.0.0.1:8080/v1/user"
     ```
     Response:
     ```json
@@ -54,7 +54,7 @@ go run main.go
     ```
   - List existing accounts:
     ```bash
-    curl -X GET -H "X-Auth-Key: some_auth_token" "http://127.0.0.1:8080/v1/user"
+    curl -X GET -H "Authorization: Bearer some_auth_token" "http://127.0.0.1:8080/v1/user"
     ```
     Response:
     ```json
@@ -70,7 +70,7 @@ go run main.go
     ```
   - Update account with ID: 1:
     ```bash
-    curl -X PATCH -H "X-Auth-Key: some_auth_token" -d '{"password": "fixed password"}'  "http://127.0.0.1:8080/v1/user/1"
+    curl -X PATCH -H "Authorization: Bearer some_auth_token" -d '{"password": "fixed password"}'  "http://127.0.0.1:8080/v1/user/1"
     ```
     Response:
     ```json
@@ -84,7 +84,7 @@ go run main.go
     ```
   - Get account with ID: 1:
     ```bash
-    curl -X GET -H "X-Auth-Key: some_auth_token"  "http://127.0.0.1:8080/v1/user/1"
+    curl -X GET -H "Authorization: Bearer some_auth_token"  "http://127.0.0.1:8080/v1/user/1"
     ```
     Response:
     ```json
@@ -98,7 +98,7 @@ go run main.go
     ```
   - Delete account with ID: 1:
     ```bash
-    curl -X DELETE -H "X-Auth-Key: some_auth_token"  "http://127.0.0.1:8080/v1/user/1"
+    curl -X DELETE -H "Authorization: Bearer some_auth_token"  "http://127.0.0.1:8080/v1/user/1"
     ```
 
 ## Feedback

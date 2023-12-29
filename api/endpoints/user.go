@@ -1,6 +1,10 @@
 package endpoints
 
-import "github.com/nixys/nxs-go-appctx-example-restapi/modules/user"
+import (
+	"context"
+
+	"github.com/nixys/nxs-go-appctx-example-restapi/modules/user"
+)
 
 type userTx struct {
 	User userDataTx `json:"user"`
@@ -16,7 +20,7 @@ type userDataTx struct {
 	Password string `json:"password"`
 }
 
-func UserData(rd interface{}, message string) interface{} {
+func UserData(c context.Context, rd interface{}, message string) interface{} {
 
 	if len(message) > 0 {
 		return nil
@@ -36,7 +40,7 @@ func UserData(rd interface{}, message string) interface{} {
 	}
 }
 
-func UsersData(rd interface{}, message string) interface{} {
+func UsersData(c context.Context, rd interface{}, message string) interface{} {
 
 	if len(message) > 0 {
 		return nil

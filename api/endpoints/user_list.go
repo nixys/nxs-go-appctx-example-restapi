@@ -1,6 +1,7 @@
 package endpoints
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/nixys/nxs-go-appctx-example-restapi/ctx"
@@ -9,7 +10,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func UsersList(cc *ctx.Ctx, c *gin.Context) RouteHandlerResponse {
+func UsersList(c context.Context, cc *ctx.Ctx, gc *gin.Context) RouteHandlerResponse {
 
 	usrs, err := cc.User.GetAll()
 	if err != nil {
