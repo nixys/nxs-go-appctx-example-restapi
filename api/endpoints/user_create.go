@@ -1,6 +1,7 @@
 package endpoints
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/nixys/nxs-go-appctx-example-restapi/ctx"
@@ -15,12 +16,12 @@ type userCreateRx struct {
 	Username string `json:"username" binding:"required"`
 }
 
-func UserCreate(cc *ctx.Ctx, c *gin.Context) RouteHandlerResponse {
+func UserCreate(c context.Context, cc *ctx.Ctx, gc *gin.Context) RouteHandlerResponse {
 
 	rx := userCreateRx{}
 
 	// Fetch data from query
-	if err := c.BindJSON(&rx); err != nil {
+	if err := gc.BindJSON(&rx); err != nil {
 
 		cc.Log.WithFields(logrus.Fields{
 			"details": err,

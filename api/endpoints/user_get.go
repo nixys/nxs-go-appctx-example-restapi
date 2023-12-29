@@ -1,6 +1,7 @@
 package endpoints
 
 import (
+	"context"
 	"errors"
 	"net/http"
 	"strconv"
@@ -12,9 +13,9 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func UserGet(cc *ctx.Ctx, c *gin.Context) RouteHandlerResponse {
+func UserGet(c context.Context, cc *ctx.Ctx, gc *gin.Context) RouteHandlerResponse {
 
-	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	id, err := strconv.ParseInt(gc.Param("id"), 10, 64)
 	if err != nil {
 
 		cc.Log.WithFields(logrus.Fields{

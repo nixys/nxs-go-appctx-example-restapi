@@ -1,6 +1,7 @@
 package endpoints
 
 import (
+	"context"
 	"errors"
 	"net/http"
 	"strconv"
@@ -19,11 +20,11 @@ type userUpdateRx struct {
 	Password *string `json:"password"`
 }
 
-func UserUpdate(cc *ctx.Ctx, c *gin.Context) RouteHandlerResponse {
+func UserUpdate(c context.Context, cc *ctx.Ctx, gc *gin.Context) RouteHandlerResponse {
 
 	rx := userUpdateRx{}
 
-	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	id, err := strconv.ParseInt(gc.Param("id"), 10, 64)
 	if err != nil {
 
 		cc.Log.WithFields(logrus.Fields{
@@ -37,7 +38,7 @@ func UserUpdate(cc *ctx.Ctx, c *gin.Context) RouteHandlerResponse {
 	}
 
 	// Fetch data from query
-	if err := c.BindJSON(&rx); err != nil {
+	if err := gc.BindJSON(&rx); err != nil {
 
 		cc.Log.WithFields(logrus.Fields{
 			"details": err,

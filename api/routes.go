@@ -1,13 +1,15 @@
 package api
 
 import (
+	"context"
+
 	"github.com/nixys/nxs-go-appctx-example-restapi/api/endpoints"
 	"github.com/nixys/nxs-go-appctx-example-restapi/ctx"
 
 	"github.com/gin-gonic/gin"
 )
 
-func RoutesSet(cc *ctx.Ctx) *gin.Engine {
+func RoutesSet(c context.Context, cc *ctx.Ctx) *gin.Engine {
 
 	gin.SetMode(gin.ReleaseMode)
 
@@ -19,31 +21,31 @@ func RoutesSet(cc *ctx.Ctx) *gin.Engine {
 	v1 := router.Group("/v1")
 	{
 		v1.Use(endpoints.RequestSizeLimiter(cc.API.ClientMaxBodySizeBytes))
-		v1.Use(endpoints.Authorize(cc.API.AuthToken))
+		v1.Use(endpoints.Authorize(c, cc.API.AuthToken))
 
 		user := v1.Group("/user")
 		{
-			user.GET("", endpoints.RouteHandlerDefault(cc, endpoints.RouteHandlers{
+			user.GET("", endpoints.RouteHandlerDefault(c, cc, endpoints.RouteHandlers{
 				Handler:       endpoints.UsersList,
 				DataTransform: endpoints.UsersData,
 			}))
 
-			user.GET("/:id", endpoints.RouteHandlerDefault(cc, endpoints.RouteHandlers{
+			user.GET("/:id", endpoints.RouteHandlerDefault(c, cc, endpoints.RouteHandlers{
 				Handler:       endpoints.UserGet,
 				DataTransform: endpoints.UserData,
 			}))
 
-			user.POST("", endpoints.RouteHandlerDefault(cc, endpoints.RouteHandlers{
+			user.POST("", endpoints.RouteHandlerDefault(c, cc, endpoints.RouteHandlers{
 				Handler:       endpoints.UserCreate,
 				DataTransform: endpoints.UserData,
 			}))
 
-			user.PATCH("/:id", endpoints.RouteHandlerDefault(cc, endpoints.RouteHandlers{
+			user.PATCH("/:id", endpoints.RouteHandlerDefault(c, cc, endpoints.RouteHandlers{
 				Handler:       endpoints.UserUpdate,
 				DataTransform: endpoints.UserData,
 			}))
 
-			user.DELETE("/:id", endpoints.RouteHandlerDefault(cc, endpoints.RouteHandlers{
+			user.DELETE("/:id", endpoints.RouteHandlerDefault(c, cc, endpoints.RouteHandlers{
 				Handler: endpoints.UserDelete,
 			}))
 		}

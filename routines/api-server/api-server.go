@@ -22,7 +22,10 @@ func Runtime(app appctx.App) error {
 
 	cc := app.ValueGet().(*ctx.Ctx)
 
-	s := servStart(cc)
+	srvc, srvf := context.WithCancel(app.SelfCtx())
+	defer srvf()
+
+	s := servStart(srvc, cc)
 
 	for {
 		select {
@@ -47,14 +50,14 @@ func Runtime(app appctx.App) error {
 	}
 }
 
-func servStart(cc *ctx.Ctx) *httpServerContext {
+func servStart(c context.Context, cc *ctx.Ctx) *httpServerContext {
 
 	s := &httpServerContext{
 		Server: http.Server{
 			Addr:         cc.API.Bind,
 			ReadTimeout:  10 * time.Second,
 			WriteTimeout: 10 * time.Second,
-			Handler:      api.RoutesSet(cc),
+			Handler:      api.RoutesSet(c, cc),
 		},
 		done: make(chan interface{}),
 	}
